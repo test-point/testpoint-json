@@ -1,13 +1,42 @@
 var express = require('express');
-var UnMarshaller = require('../scripts/unmarshaller')
-var fs = require('fs');
 var router = express.Router();
+var fs = require('fs');
+var parseString = require('xml2js').parseString;
+var UnMarshaller = require('../../scripts/unmarshaller')
+var Marshaller = require('../../scripts/marshaller')
+
 var unmarshallerInvoice = new UnMarshaller('../resources/CoreInvoice/');
 var unmarshallerResponse = new UnMarshaller('../resources/Response/');
-var parseString = require('xml2js').parseString;
+var marshallerInvoice = new Marshaller('../resources/CoreInvoice/');
+var marshallerResponse = new Marshaller('../resources/Response/');
 
+router.post('/json2ubl', function (req, res, next) {
+    if(req.body.ubljson) {
+        var result;
+        var document = JSON.parse(req.body["ubljson"]);
+        if(document["Invoice"]){
+            var result = marshallerInvoice.marshalString(req.body.ubljson, true);
+        } else if (document["ApplicationResponse"]) {
+            var result = marshallerResponse.marshalString(req.body.ubljson, true);
+        }
 
-router.post('/', function (req, res, next) {
+        if(result) {
+            res.setHeader('content-type', 'application/xml');
+            res.end(result);
+        }
+        else {
+            var err = new Error('Unexpected document type received.');
+            err.status = 422;
+            next(err);
+        }
+    } else {
+        var err = new Error('The body parameter \'ubljson\' is required.');
+        err.status = 422;
+        next(err);
+    }
+});
+
+router.post('/ubl2json', function (req, res, next) {
     if(req.body.ublxml) {
         var ns;
         parseString(req.body.ublxml, function (err, result) {
@@ -44,4 +73,5 @@ router.post('/', function (req, res, next) {
         next(err);
     }
 });
+
 module.exports = router;

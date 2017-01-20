@@ -4,8 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 
-var ubl2json = require('./routes/ubl2json');
-var json2ubl = require('./routes/json2ubl');
+var routerV0 = require('./routes/v0/router');
 var bodyParser = require('body-parser');
 
 var app = express();
@@ -14,8 +13,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use('/ubl2json', ubl2json);
-app.use('/json2ubl', json2ubl);
+var router = express.Router();
+
+app.get('/', function(req,res){  
+    res.redirect('http://testpoint.io/json')
+});
+
+app.use('/api/v0/', routerV0);
+
 
 
 // uncomment after placing your favicon in /public
