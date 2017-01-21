@@ -52,12 +52,16 @@ router.post('/ubl2json', function (req, res, next) {
             }
         });
         var result;
+        var schemaLink;
         if(ns == "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"){
             result = unmarshallerInvoice.unmarshalString(req.body.ublxml, true);
+            schemaLink = "https://raw.githubusercontent.com/ausdigital/ausdigital-bill/master/spec/v1.0.0/Invoice.json"
         } else if (ns == "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2") {
             result = unmarshallerResponse.unmarshalString(req.body.ublxml, true);
+            schemaLink = "https://raw.githubusercontent.com/ausdigital/ausdigital-bill/master/spec/v1.0.0/Response.json"
         }
         if(result) {
+            res.setHeader('Link', '<'+schemaLink+'>; rel="describedby"');
             res.setHeader('content-type', 'application/json');
             res.end(JSON.stringify(result));
         }
