@@ -1,6 +1,8 @@
-web:
-  build: .
-  # volumes:
-  #   - "./:/src/"
-  ports:
-    - "3030:3000"
+version: '2'
+services:
+  web_json:
+    build: .
+    image: testpoint-json:latest
+    container_name: testpoint-json
+    ports:
+      - "3030:3000"
