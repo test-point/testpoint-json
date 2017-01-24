@@ -36,6 +36,13 @@ router.post('/json2ubl', function (req, res, next) {
     }
 });
 
+router.all('/json2ubl', function (req, res, next) {
+    var err = new Error('HTTP method ' + req.method +' is not supported by this URL.');
+    err.status = 405;
+    next(err);
+
+});
+
 router.post('/ubl2json', function (req, res, next) {
     if(req.body.ublxml) {
         var ns;
@@ -77,5 +84,14 @@ router.post('/ubl2json', function (req, res, next) {
         next(err);
     }
 });
+
+router.all('/ubl2json', function (req, res, next) {
+    var err = new Error('HTTP method ' + req.method +' is not supported by this URL.');
+    err.status = 405;
+    next(err);
+
+});
+
+
 
 module.exports = router;
