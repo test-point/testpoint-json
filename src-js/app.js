@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
 var router = express.Router();
 
 app.get('/', function(req,res){  
-    res.redirect('http://testpoint.io/json')
+    res.redirect('http://testpoint.io/ubl-json')
 });
 
 app.use('/api/v0/', routerV0);
