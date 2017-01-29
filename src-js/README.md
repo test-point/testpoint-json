@@ -1,4 +1,4 @@
-# The AusDigital UBL JSON Format reference implementation 
+# The AusDigital UBL Syntax 2.0 Specification reference implementation 
 A JSON &lt;-> XML transformation service for UBL messages.
 
 Node JS Express web application.
