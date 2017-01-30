@@ -49,9 +49,14 @@ app.use(function (err, req, res, next) {
     // render the error page
     var status = err.status || 500;
     res.status(status);
-    var errors = {"Errors": [{"Error": {"code": status, "title": err.message}}]};
-    res.end(JSON.stringify(errors));
-    /*res.render('error');*/
+    var errMessage;
+    try {
+        errMessage = JSON.parse(err.message);
+    } catch (e) {
+        console.log("building error model for " + err.message);
+        errMessage = {errors: [{"title": err.message}]};
+    }
+    res.end(JSON.stringify(errMessage));
 });
 
 
